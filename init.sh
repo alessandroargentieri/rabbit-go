@@ -25,7 +25,8 @@ echo "...building Go executables..."
 cd ./publisher && go build -o rabbit-publisher && cd ../
 cd ./consumer && go build -o rabbit-consumer && cd ../
 
-sleep 5s
+echo "wait until the rabbitmq instance is ready"
+sleep 10s
 
 # export env vars
 export RABBITMQ_USER=myuser
