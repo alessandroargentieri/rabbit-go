@@ -1,6 +1,5 @@
 # Instructions
 
----
 
 ## With Minikube
 
@@ -79,3 +78,16 @@ curl http://<consumer-copied-ip>:32100/consumer
 - enter the folder `cd rabbit-go`
 
 - start everything with the script `./init.sh`
+
+### Call the publisher service
+
+```
+curl http://localhost:8080/publisher
+```
+### Call the consumer services
+
+```
+curl http://localhost:8081/consumer
+curl http://localhost:8082/consumer
+curl http://localhost:8083/consumer
+```
