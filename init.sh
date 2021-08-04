@@ -31,14 +31,14 @@ export RABBITMQ_URL=localhost:5672
 
 # launch 1 publisher app
 export PORT=8080
-./publisher/rabbit-publisher &
+./publisher/rabbit-publisher >> publisher-logs.txt 2>&1 &
 
 # launch 3 consumer apps
 export PORT=8081
-./consumer/rabbit-consumer &
+./consumer/rabbit-consumer >> consumer-1-logs.txt 2>&1 &
 
 export PORT=8082
-./consumer/rabbit-consumer &
+./consumer/rabbit-consumer >> consumer-2-logs.txt 2>&1 &
 
 export PORT=8083
-./consumer/rabbit-consumer &
+./consumer/rabbit-consumer >> consumer-3-logs.txt 2>&1 &

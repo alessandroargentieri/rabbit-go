@@ -60,13 +60,14 @@ minikube service list
 ### Call the publisher service through its NodePort service (on port 32000)
 
 ```
-curl http://<publisher-copied-ip>:32000/publisher
+curl http://<publisher-copied-ip>:32000/publisher | jq
 ```
 ### Call the consumer service through its NodePort service (on port 32100)
 
 ```
-curl http://<consumer-copied-ip>:32100/consumer
+curl http://<consumer-copied-ip>:32100/consumer | jq
 ```
+
 ---
 
 ## With Go and Docker
@@ -82,12 +83,36 @@ curl http://<consumer-copied-ip>:32100/consumer
 ### Call the publisher service
 
 ```
-curl http://localhost:8080/publisher
+curl http://localhost:8080/publisher | jq
 ```
 ### Call the consumer services
 
 ```
-curl http://localhost:8081/consumer
-curl http://localhost:8082/consumer
-curl http://localhost:8083/consumer
+curl http://localhost:8081/consumer | jq
+curl http://localhost:8082/consumer | jq
+curl http://localhost:8083/consumer | jq
+```
+
+### Check the logs in the log files saved locally
+
+```
+# open the producer log file
+tail -f publisher-logs.txt
+
+# Ctrl+C
+
+# open the consumer-1 log file
+tail -f consumer-1-logs.txt
+
+# Ctrl+C
+
+# open the consumer-2 log file
+tail -f consumer-1-logs.txt
+
+# Ctrl+C
+
+# open the consumer-3 log file
+tail -f consumer-1-logs.txt
+
+# Ctrl+C
 ```
