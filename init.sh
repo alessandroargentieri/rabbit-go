@@ -14,15 +14,18 @@ if [[ $( docker ps -a | grep my-rabbit | head -c12 ) ]]; then
     	echo "...and running!"
     else
     	docker start my-rabbit
-    	echo "... starting container"
+    	echo "...starting container"
     fi
 else
 	docker run -d --name my-rabbit -e RABBITMQ_DEFAULT_USER=myuser -e RABBITMQ_DEFAULT_PASS=password -p 5672:5672 -p 15672:15672 rabbitmq:3.8-management
 fi
 
 # build executable
+echo "...building Go executables..."
 cd ./publisher && go build -o rabbit-publisher && cd ../
 cd ./consumer && go build -o rabbit-consumer && cd ../
+
+sleep 5s
 
 # export env vars
 export RABBITMQ_USER=myuser
@@ -30,10 +33,12 @@ export RABBITMQ_PASSWORD=password
 export RABBITMQ_URL=localhost:5672
 
 # launch 1 publisher app
+echo "...starting producer app..."
 export PORT=8080
 ./publisher/rabbit-publisher >> publisher-logs.txt 2>&1 &
 
 # launch 3 consumer apps
+echo "...starting 3 consumer app..."
 export PORT=8081
 ./consumer/rabbit-consumer >> consumer-1-logs.txt 2>&1 &
 
