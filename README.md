@@ -1,7 +1,13 @@
 # Instructions
 
+Example app composed by a **rabbitmq** message broker instance and two _golang_ apps: a message publisher and a message consumer.
+The example is meant to show how the publisher application can create its own _exchange_ (a notification channel) and publish its messages on this _exchange_.
+At the same time there can be more than 1 consumer applications: each consumer creates its own _queue_ subscribing it to the _exchange_.
+The queues receive a copy of each one of the messages in the subscribed _exchange_ so this system can perfectly work as a *Pub/Sub* system.
 
-## With Minikube
+In the example is explained how to start the apps using either Minikube (k8s) and Golang and Docker.
+
+## Using Minikube
 
 - Go to [Katacoda Minikube environment](https://www.katacoda.com/scenario-examples/courses/environment-usages/minikube):
 
@@ -70,7 +76,7 @@ curl http://<consumer-copied-ip>:32100/consumer | jq
 
 ---
 
-## With Go and Docker
+## Using Go and Docker
 
 - Go to [Katacoda Ubuntu environment](https://www.katacoda.com/courses/ubuntu/playground):
 
