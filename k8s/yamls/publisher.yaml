@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: Service              
+metadata:
+  name: publisher
+spec:
+  type: NodePort      
+  ports:
+  - port: 80              
+    targetPort: 8080   
+    nodePort: 32000      
+  selector:            
+    app: publisher    
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: publisher
+  labels:
+    app: publisher
+spec:
+  replicas: 1                                          
+  minReadySeconds: 15
+  strategy:
+    type: RollingUpdate                                   
+    rollingUpdate: 
+      maxUnavailable: 1                                   
+      maxSurge: 1                                         
+  selector:
+    matchLabels:
+      app: publisher
+      tier: rabbit-go
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: publisher
+        tier: rabbit-go
+    spec:
+      containers:
+      - image: alessandroargentieri/rabbit-go-publisher
+        name: publisher
+        env:
+        - name: RABBITMQ_USER
+          valueFrom:
+            secretKeyRef:
+              name: rabbit-credentials
+              key: user
+        - name: RABBITMQ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: rabbit-credentials
+              key: password
+        - name: RABBITMQ_URL
+          value: "rabbit:5672"  # "amqp://myuser:password@localhost:5672/"
+        - name: PORT
+          value: "8080"
+        ports:
+        - containerPort: 8080
+          name: publisher-api

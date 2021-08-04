@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: Service              
+metadata:
+  name: rabbit
+spec:
+  type: ClusterIP       
+  ports:
+  - port: 5672              
+    targetPort: 5672 
+    name: main-port
+  - port: 15672              
+    targetPort: 15672 
+    name: mng-port        
+  selector:            
+    app: rabbit    
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rabbit
+  labels:
+    app: rabbit
+spec:
+  replicas: 1                                          
+  minReadySeconds: 15
+  strategy:
+    type: RollingUpdate                                   
+    rollingUpdate: 
+      maxUnavailable: 1                                   
+      maxSurge: 1                                         
+  selector:
+    matchLabels:
+      app: rabbit
+      tier: rabbit-go
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: rabbit
+        tier: rabbit-go
+    spec:
+      containers:
+      - image: rabbitmq:3.8-management
+        name: rabbit
+        env:
+        - name: RABBITMQ_DEFAULT_USER
+          valueFrom:
+            secretKeyRef:
+              name: rabbit-credentials
+              key: user
+        - name: RABBITMQ_DEFAULT_PASS
+          valueFrom:
+            secretKeyRef:
+              name: rabbit-credentials
+              key: password
+        ports:
+        - containerPort: 5672
+          name: main-port
+        - containerPort: 15672
+          name: mng-port
